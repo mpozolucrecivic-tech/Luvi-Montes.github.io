@@ -1,25 +1,20 @@
-const playBtn = document.getElementById('play-button');
-const music = document.getElementById('background-music');
-const cards = document.querySelectorAll('.card');
+document.addEventListener('DOMContentLoaded', () => {
+    const music = document.getElementById('background-music');
+    const cards = document.querySelectorAll('.card');
 
-// Controlar la música (los navegadores bloquean el auto-play)
-playBtn.addEventListener('click', () => {
-    if (music.paused) {
-        music.play();
-        playBtn.innerText = "Pausar Música ⏸️";
-    } else {
-        music.pause();
-        playBtn.innerText = "Seguir Música ▶️";
-    }
-});
+    // Función para iniciar música al primer clic en cualquier parte de la web
+    const iniciarMusica = () => {
+        music.play().catch(e => console.log("Audio esperando interacción..."));
+        // Una vez que inicia, quitamos este evento para que no se repita
+        document.removeEventListener('click', iniciarMusica);
+    };
+    
+    document.addEventListener('click', iniciarMusica);
 
-// Animación al hacer scroll
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('show');
-        }
+    // Lógica para girar las cartas al hacer clic
+    cards.forEach(card => {
+        card.addEventListener('click', () => {
+            card.classList.toggle('flipped');
+        });
     });
-}, { threshold: 0.1 });
-
-cards.forEach(card => observer.observe(card));
+});
